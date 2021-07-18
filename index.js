@@ -12,7 +12,8 @@ const hbs = require('express-handlebars');
 
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
-app.use(methodOverride('_method'))
+
+app.use(methodOverride('_method', {methods: ["POST", "GET"] }))
 
 app.set('views', path.join(__dirname, 'views'))
 
@@ -59,7 +60,7 @@ app.get('/tasks',async (req, res) => {
     }
 });
 
-app.get('/delete/task/:id',async (req, res) => {
+app.delete('/delete/task/:id',async (req, res) => {
 
     try {        
         const { id } = req.params;
@@ -85,14 +86,15 @@ app.get('/updateForm/task/:id',async (req, res) => {
     }
 });
 
+
 app.put('/task/:taskId', (res, req)=>{
+    console.log(req.body)    
 
     try {
-        
         let taskId = req.params.taskId
         let update = req.body
         
-        Task.findByIdAndUpdate(taskId, update, (err, tasUpdate)=>{
+        Task.findByIdAndUpdate(taskId, update, (err, taskUpdate)=>{
             if(err) res.status(500).send({message: `error al actualizar la tarea: ${err}`})
         })
         res.status(200).send({task: taskUpdated})
