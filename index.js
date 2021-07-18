@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const path = require('path')
+const methodOverride = require('method-override')
 
 require('./configuration/configdb')
 
@@ -11,6 +12,7 @@ const hbs = require('express-handlebars');
 
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
+app.use(methodOverride('_method'))
 
 app.set('views', path.join(__dirname, 'views'))
 
@@ -47,7 +49,59 @@ app.post('/', async(req,res)=>{
     }
 })
  
+app.get('/tasks',async (req, res) => {
+    try {
+        const tasks = await Task.find();
+        res.render('tasks', { tasks });
 
+    }catch (error) {
+        throw new Error(error)
+    }
+});
+
+app.get('/delete/task/:id',async (req, res) => {
+
+    try {        
+        const { id } = req.params;
+        await Task.deleteOne({_id:id })            
+        res.redirect('/tasks');        
+
+    }catch (error) {
+        throw new Error(error)
+    }
+});
+
+
+app.get('/updateForm/task/:id',async (req, res) => {
+
+    try {        
+        let task
+        const { id } = req.params;
+        task = await Task.findOne({_id:id});
+        console.log(task)
+        res.render('updateForm', {task})
+    }catch (error) {
+        throw new Error(error)
+    }
+});
+
+app.put('/task/:taskId', (res, req)=>{
+
+    try {
+        
+        let taskId = req.params.taskId
+        let update = req.body
+        
+        Task.findByIdAndUpdate(taskId, update, (err, tasUpdate)=>{
+            if(err) res.status(500).send({message: `error al actualizar la tarea: ${err}`})
+        })
+        res.status(200).send({task: taskUpdated})
+    } catch (error) {
+        throw new Error(error)
+        
+    }
+
+})
 
 
 app.listen(3000, ()=>console.log("running in port 3000"))
