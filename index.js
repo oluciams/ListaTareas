@@ -2,6 +2,9 @@ const express = require('express')
 const app = express()
 const path = require('path')
 const methodOverride = require('method-override')
+const cookieSession = require('cookie-session')
+
+
 
 require('./configuration/configdb')
 
@@ -12,6 +15,10 @@ const hbs = require('express-handlebars');
 
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
+app.use(cookieSession({
+    secret: 'una_session',
+    maxAge: 24 * 60 * 60 *1000
+}))
 
 app.use(methodOverride('_method', {methods: ["POST", "GET"] }))
 
@@ -29,14 +36,19 @@ app.engine('.hbs', hbs({
  }))
   
  app.set('view engine', 'hbs')
+
   
  app.get('/', async (req, res)=>{  
     try{
-        res.render('index')
+        req.session.views = (req.session.views || 0) + 1
+        res.render('index', {views:req.session.views} )
+        
     } catch (error) {
         throw new Error(error)
     }
 })
+
+
 
 app.post('/', async(req,res)=>{
     try{
@@ -72,7 +84,6 @@ app.delete('/delete/task/:id',async (req, res) => {
     }
 });
 
-
 app.get('/updateForm/task/:id',async (req, res) => {
 
     try {        
@@ -104,6 +115,12 @@ app.put('/task/:taskId', (res, req)=>{
     }
 
 })
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Algo salió mal!');
+  });
+
 
 
 app.listen(3000, ()=>console.log("running in port 3000"))
