@@ -9,6 +9,7 @@ const cookieSession = require('cookie-session')
 require('./configuration/configdb')
 
 const Task = require('./models/modelTask')
+const User = require('./models/modelUser')
 
 const hbs = require('express-handlebars');
 
@@ -110,11 +111,43 @@ app.put('/task/:taskId', (res, req)=>{
         })
         res.status(200).send({task: taskUpdated})
     } catch (error) {
-        throw new Error(error)
-        
+        throw new Error(error)        
     }
-
 })
+
+app.get('/register', (req,res)=>{      
+    res.render('register')    
+})
+
+app.post('/register', async(req,res)=>{
+    try{ 
+        const user = await User.create({
+            email: req.body.email,
+            password: req.body.password
+        })
+        res.redirect('/login')      
+        
+    }catch (error) {
+        throw new Error(error)
+    }
+})
+
+app.get('/login', (req,res)=>{
+    res.render('login')
+})
+
+app.post('/login', async(req,res)=>{
+    try{        
+        
+    }catch (error) {
+        throw new Error(error)
+    }
+})
+
+app.get('/logout', (req,res)=>{
+     
+})
+
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
