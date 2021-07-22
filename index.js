@@ -137,15 +137,24 @@ app.get('/login', (req,res)=>{
 })
 
 app.post('/login', async(req,res)=>{
-    try{        
-        
+    try{
+        const user = await User.authenticate(req.body.email, req.body.password)
+        if(user){
+            req.session.userId = user._id
+            return res.redirect('/tasks')
+        }else{
+            res.render('/login', {error: 'wrong email or password. Try again!'})
+        }            
     }catch (error) {
         throw new Error(error)
     }
 })
 
 app.get('/logout', (req,res)=>{
-     
+    res.session = null
+    res.clearCookie('session')
+    res.clearCookie('session.sig')
+    res.redirect('/login')
 })
 
 
