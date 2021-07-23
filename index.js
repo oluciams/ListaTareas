@@ -38,8 +38,27 @@ app.engine('.hbs', hbs({
   
  app.set('view engine', 'hbs')
 
+ const requireUser = (req, res, next) => {
+    if(!res.locals.user){
+        return res.redirect('/login')            
+        }
+        next()    
+    }
+
+ app.use(async (req, res, next) => {
+    const userId = req.session.userId
+    if(userId){
+        const user = await User.findById(userId)
+        if(user){
+            res.locals.user = user            
+        }else{
+            delete req.session.userId
+        }
+    }
+    next()    
+})
   
- app.get('/', async (req, res)=>{  
+ app.get('/', requireUser, async (req, res)=>{  
     try{
         req.session.views = (req.session.views || 0) + 1
         res.render('index', {views:req.session.views} )
@@ -51,7 +70,7 @@ app.engine('.hbs', hbs({
 
 
 
-app.post('/', async(req,res)=>{
+app.post('/', requireUser, async(req,res)=>{
     try{
         const task = new Task(req.body);
         await task.save();
@@ -63,7 +82,7 @@ app.post('/', async(req,res)=>{
     }
 })
  
-app.get('/tasks',async (req, res) => {
+app.get('/tasks',requireUser, async (req, res) => {
     try {
         const tasks = await Task.find();
         res.render('tasks', { tasks });
@@ -73,7 +92,7 @@ app.get('/tasks',async (req, res) => {
     }
 });
 
-app.delete('/delete/task/:id',async (req, res) => {
+app.delete('/delete/task/:id',requireUser, async (req, res) => {
 
     try {        
         const { id } = req.params;
@@ -151,9 +170,10 @@ app.post('/login', async(req,res)=>{
 })
 
 app.get('/logout', (req,res)=>{
-    res.session = null
+    
+    req.session = null    
     res.clearCookie('session')
-    res.clearCookie('session.sig')
+    res.clearCookie('session.sig')    
     res.redirect('/login')
 })
 
