@@ -71,10 +71,15 @@ app.engine('.hbs', hbs({
 
 
 app.post('/', requireUser, async(req,res)=>{
+    const data = {
+        user: res.locals.user,
+        title: req.body.title,
+        description: req.body.description
+    }
     try{
-        const task = new Task(req.body);
+        const task = new Task(data);
         await task.save();
-        const tasks = await Task.find();
+        const tasks = await Task.find({user: res.locals.user});
         res.render('tasks', { tasks });
 
     }catch (error) {
@@ -84,7 +89,7 @@ app.post('/', requireUser, async(req,res)=>{
  
 app.get('/tasks',requireUser, async (req, res) => {
     try {
-        const tasks = await Task.find();
+        const tasks = await Task.find({user: res.locals.user});
         res.render('tasks', { tasks });
 
     }catch (error) {
