@@ -69,7 +69,6 @@ app.engine('.hbs', hbs({
 })
 
 
-
 app.post('/', requireUser, async(req,res)=>{
     const data = {
         user: res.locals.user,
@@ -97,8 +96,7 @@ app.get('/tasks',requireUser, async (req, res) => {
     }
 });
 
-app.delete('/delete/task/:id',requireUser, async (req, res) => {
-
+app.delete('/tasks/delete/:id',requireUser, async (req, res) => {
     try {        
         const { id } = req.params;
         await Task.deleteOne({_id:id })            
