@@ -87,19 +87,36 @@ app.get('/', requireUser, async (req, res)=>{
 
 //crear tarea
 app.post('/', requireUser, async(req,res)=>{
-    const data = {
-        user: res.locals.user,
-        title: req.body.title,
-        description: req.body.description
-    }
-    try{
-        const task = new Task(data);
-        await task.save();        
-        req.flash('success_msg', 'Task added successfully')
-        res.redirect('tasks');        
-    }catch (error) {
-        throw new Error(error)
-    }
+    const { title, description } = req.body;
+    const errors = []
+
+    if (!title) {
+        errors.push({ text: "Please Write a Title." });
+      }
+    if (!description) {
+        errors.push({ text: "Please Write a Description" });
+      }
+    if (errors.length > 0) {
+        res.render("index", {
+          errors,
+          title,
+          description,
+        });
+    } else {
+        const data = {
+            user: res.locals.user,
+            title: req.body.title,
+            description: req.body.description
+        }
+        try{
+            const task = new Task(data);
+            await task.save();        
+            req.flash('success_msg', 'Task added successfully')
+            res.redirect('tasks');        
+        }catch (error) {
+            throw new Error(error)
+        }
+    }    
 })
 
 
