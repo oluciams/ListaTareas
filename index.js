@@ -26,6 +26,7 @@ const Task = require('./models/modelTask')
 
 app.use((req, res, next) => {
     res.locals.success_msg = req.flash('success_msg')
+    res.locals.danger_msg = req.flash('danger_msg')
     next()
 
 })
@@ -157,6 +158,7 @@ app.post('/register', async(req,res)=>{
             email: req.body.email,
             password: req.body.password
         })
+        req.flash('success_msg', 'User registered successfully')
         res.redirect('/login')      
         
     }catch (error) {
@@ -173,9 +175,11 @@ app.post('/login', async(req,res)=>{
         const user = await User.authenticate(req.body.email, req.body.password)
         if(user){
             req.session.userId = user._id
+            req.flash('success_msg', 'User logged in successfully')
             return res.redirect('/tasks')
         }else{
-            res.render('/login', {error: 'wrong email or password. Try again!'})
+            req.flash('danger_msg', 'wrong email or password. Try again!')
+            res.redirect('/login')
         }            
     }catch (error) {
         throw new Error(error)
