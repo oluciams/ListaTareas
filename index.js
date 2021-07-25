@@ -4,6 +4,7 @@ const path = require('path')
 const hbs = require('express-handlebars');
 const cookieSession = require('cookie-session')
 const methodOverride = require('method-override')
+const flash = require('connect-flash');
 
 require('./configuration/configdb')
 
@@ -15,10 +16,19 @@ app.use(cookieSession({
     maxAge: 24 * 60 * 60 *1000
 }))
 
-app.use(methodOverride('_method'))
+app.use(methodOverride('_method', {methods: ['POST', 'GET']}))
+app.use(flash())
 
 const User = require('./models/modelUser')
 const Task = require('./models/modelTask')
+
+//variables globales
+
+app.use((req, res, next) => {
+    res.locals.success_msg = req.flash('success_msg')
+    next()
+
+})
 
 
 // middlewares
@@ -72,17 +82,9 @@ app.get('/', requireUser, async (req, res)=>{
     }
 })
 
-app.put('/edit-task/:id', requireUser, async(res, req)=>{
-    try{
-        console.log(req.body)
-        const {title, description} = req.body
-        await Task.findByIdAndUpdate(req.params.id, {title, description})
-        res.redirect('/tasks')         
-    }catch(error) {
-        throw new Error(error)
-    }  
-})
 
+
+//crear tarea
 app.post('/', requireUser, async(req,res)=>{
     const data = {
         user: res.locals.user,
@@ -91,10 +93,9 @@ app.post('/', requireUser, async(req,res)=>{
     }
     try{
         const task = new Task(data);
-        await task.save();
-        const tasks = await Task.find({user: res.locals.user});
-        res.render('tasks', { tasks });
-
+        await task.save();        
+        req.flash('success_msg', 'Task added successfully')
+        res.redirect('tasks');        
     }catch (error) {
         throw new Error(error)
     }
@@ -121,10 +122,24 @@ app.get('/task/edit/:id', requireUser, async (req, res) => {
     res.render('edit-task', { task })    
 })
 
+app.put('/edit-task/:id', requireUser, async(res, req)=>{
+    try{
+        console.log(req.body)
+        const {title, description} = req.body
+        await Task.findByIdAndUpdate(req.params.id, {title, description})
+        req.flash('success_msg', 'Task updated successfully')
+        res.redirect('/tasks')         
+    }catch(error) {
+        throw new Error(error)
+    }  
+})
+
+
 app.delete('/tasks/delete/:id',requireUser, async (req, res) => {
     try {        
         const { id } = req.params;
-        await Task.deleteOne({_id:id })            
+        await Task.deleteOne({_id:id }) 
+        req.flash('success_msg', 'Task deleted successfully')           
         res.redirect('/tasks');        
 
     }catch (error) {
