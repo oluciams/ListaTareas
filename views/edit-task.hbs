@@ -1,24 +1,18 @@
-<div class="col-md-4 mx-auto">
-  <div class="card">
-    <div class="card-header">
-      <h3>Edit task</h3>
-    </div>
-    <div class="card-body">
-      <form action="/edit-task/{{task._id}}?_method=PUT" method="POST">
-        <input type="hidden" name="_method" value="PUT">
-        {{!-- <form action="/edit-task/{{task._id}}" method="POST"> --}}
-        <div class="form-group">
-          <input type="text" name="title" class="form-control" value="{{task.title}}"/>
-        </div>
-        <div class="form-group">
-          <textarea name="description" class="form-control">{{task.description}}</textarea>
-        </div>
-        <div class="form-group">
-          <button class="btn btn-primary btn-block" type="submit">
-            Save
-          </button>
-        </div>
-      </form>
-    </div>
+<form action="/edit-task/{{task._id}}?_method=PUT" method="POST">
+  <input type="hidden" name="_method" value="PUT">
+
+  <div class="mb-3">
+    <label for="title" class="form-label">Title</label>
+    <input type="text" class="form-control" name="title" value="{{task.title}}">
   </div>
-</div>
+
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <input type="text" class="form-control" name="description" value="{{task.description}}">  
+  </div>
+
+  <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+
+
