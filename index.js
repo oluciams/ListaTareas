@@ -62,6 +62,26 @@ app.engine('.hbs', hbs({
 // Rutas de usuario
   
  
+app.get('/', requireUser, async (req, res)=>{  
+    try{
+        req.session.views = (req.session.views || 0) + 1
+        res.render('index', {views:req.session.views} )
+        
+    } catch (error) {
+        throw new Error(error)
+    }
+})
+
+app.put('/edit-task/:id', requireUser, async(res, req)=>{
+    try{
+        console.log(req.body)
+        const {title, description} = req.body
+        await Task.findByIdAndUpdate(req.params.id, {title, description})
+        res.redirect('/tasks')         
+    }catch(error) {
+        throw new Error(error)
+    }  
+})
 
 app.post('/', requireUser, async(req,res)=>{
     const data = {
@@ -83,26 +103,6 @@ app.post('/', requireUser, async(req,res)=>{
 
 // Rutas de tareas
 
-app.put('/edit-task/:id', requireUser, async(res, req)=>{
-    try{
-        console.log(req.body)
-        const {title, description} = req.body
-        await Task.findByIdAndUpdate(req.params.id, {title, description})
-        res.redirect('/tasks')         
-    }catch(error) {
-        throw new Error(error)
-    }  
-})
-
-app.get('/', requireUser, async (req, res)=>{  
-    try{
-        req.session.views = (req.session.views || 0) + 1
-        res.render('index', {views:req.session.views} )
-        
-    } catch (error) {
-        throw new Error(error)
-    }
-})
 
  
 app.get('/tasks',requireUser, async (req, res) => {
