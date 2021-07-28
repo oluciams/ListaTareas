@@ -7,7 +7,7 @@ const getHome = (req, res)=>{
     res.render('index', {views:req.session.views} )        
 }
 
-//crear tarea
+
 const createTask = async (req,res)=>{
     const { title, description } = req.body;
     const errors = []
@@ -36,6 +36,19 @@ const createTask = async (req,res)=>{
     }    
 }
 
+const updateTask =  async(req, res)=>{
+    try{
+        console.log(req.body)
+        const {title, description} = req.body
+        await Task.findByIdAndUpdate(req.params.id, {title, description})
+        req.flash('success_msg', 'Task updated successfully')
+        res.redirect('/tasks')   
+    }catch (error) {
+        throw new Error(error)
+    }
+}
+
+
 const showTasks = async (req, res) => {
     try {
         const tasks = await Task.find({user: res.locals.user});
@@ -60,15 +73,6 @@ const renderEditForm = async (req, res) => {
     const task = await Task.findById(req.params.id)
     res.render('edit-task', { task })    
 }
-
-const updateTask =  async(res, req)=>{
-        console.log(req.body)
-        const {title, description} = req.body
-        await Task.findByIdAndUpdate(req.params.id, {title, description})
-        req.flash('success_msg', 'Task updated successfully')
-        res.redirect('/tasks')    
-}
-
 
 module.exports = {
     getHome,

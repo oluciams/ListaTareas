@@ -14,7 +14,7 @@ const userRoutes = require('./routes/user.routes')
 require('./configuration/configdb')
 
 
-app.use(express.urlencoded({extended:false}))
+app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 app.use(cookieSession({
     secret: 'una_session',
@@ -66,14 +66,17 @@ app.engine('.hbs', hbs({
   
  app.set('view engine', 'hbs')
 
- app.use('/', taskRoutes)
- app.use('/', userRoutes)
+ module.exports = app
+
+
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Algo salió mal!');
-  });
+});
 
-module.exports = app
+app.use(userRoutes)
+app.use(taskRoutes)
+
 
 app.listen(process.env.PORT || 3000, console.log(`running in port ${process.env.PORT || 3000}`))
