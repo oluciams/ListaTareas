@@ -21,8 +21,14 @@
       <td>{{description}}</td>
       <td>
         <div>
-        <input class="form-check-input" type="checkbox" id="{{status}}" value="true" aria-label="...">
-        </div>
+          <form action="/status/{{_id}}" method="POST">
+          {{#if status}}
+            <input class="form-check-input" type="checkbox" id="{{_id}}" name="statuscheck" onChange="this.form.submit()" aria-label="..." checked>
+          {{else}}
+            <input class="form-check-input" type="checkbox" id="{{_id}}" name="statuscheck" onChange="this.form.submit()" aria-label="...">
+          {{/if}}
+          </form>
+          </div>
       </td>    
       <td><a href="/tasks/edit/{{_id}}"><i class="fas fa-edit"></i></a></td>
       <td><a href="/tasks/delete/{{_id}}?_method=DELETE"><i class="fas fa-trash-alt"></i> </a></td>     

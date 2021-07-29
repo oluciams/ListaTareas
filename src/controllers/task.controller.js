@@ -72,11 +72,37 @@ const renderEditForm = async (req, res) => {
     res.render('edit-task', { task })    
 }
 
+const statusTask = async (req, res, next)=>{
+    let checkbox = req.body
+    console.log(checkbox)
+}
+
+const updateStatus =  async(req, res)=>{
+
+   
+    let statuscheck = req.body.statuscheck  
+
+    if(statuscheck === "on"){
+        statuscheck = true
+    }else {
+        statuscheck = false 
+    }  
+
+    try{     
+       await Task.findByIdAndUpdate(req.params.id, {status: statuscheck})      
+        res.redirect('/tasks')        
+    }catch (error) {
+        throw new Error(error)
+    }
+}
+
 module.exports = {
     getHome,
     createTask,
     showTasks,
     deleteTask,
     renderEditForm,
-    updateTask
+    updateTask,
+    statusTask,
+    updateStatus
 }
