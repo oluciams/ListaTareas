@@ -2,9 +2,8 @@ const Task = require('../models/modelTask')
 const app = require('../index')
 
 
-const getHome = (req, res)=>{  
-    req.session.views = (req.session.views || 0) + 1
-    res.render('index', {views:req.session.views} )        
+const getHome = (req, res)=>{    
+    res.render('index' )       
 }
 
 
