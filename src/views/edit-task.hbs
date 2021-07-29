@@ -1,19 +1,16 @@
 <form action="/edit/{{task._id}}?_method=PUT" method="POST">
   <input type="hidden" name="_method" value="PUT">
 
-  <div class="mb-3">
+  <div class="mb-1 col-md-6 offset-md-3">
     <label for="title" class="form-label">Title</label>
     <input type="text" class="form-control" name="title" value="{{task.title}}">
   </div>
 
-  <div class="mb-3">
+  <div class="mb-1 col-md-6 offset-md-3">
     <label for="description" class="form-label">Description</label>
     <input type="text" class="form-control" name="description" value="{{task.description}}">  
   </div>
   <div>
-    <button class="btn btn-primary btn-block" type="submit">Save</button>
+    <button class="btn btn-primary btn-block col-md-6 offset-md-3 mt-2" type="submit">Edit</button>
   </div>
 </form> 
-
-
-

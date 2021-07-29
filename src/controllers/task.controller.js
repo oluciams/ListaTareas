@@ -37,8 +37,7 @@ const createTask = async (req,res)=>{
 }
 
 const updateTask =  async(req, res)=>{
-    try{
-        console.log(req.body)
+    try{        
         const {title, description} = req.body
         await Task.findByIdAndUpdate(req.params.id, {title, description})
         req.flash('success_msg', 'Task updated successfully')

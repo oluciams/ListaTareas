@@ -1,3 +1,5 @@
+'use strict'
+
 require('dotenv').config()
 
 //express
@@ -49,8 +51,6 @@ app.use(async (req, res, next) => {
     next()    
 })
 
-//handlebars
-
 app.set('views', path.join(__dirname, 'views'))
 
 app.engine('.hbs', hbs({ 
@@ -66,10 +66,6 @@ app.engine('.hbs', hbs({
   
  app.set('view engine', 'hbs')
 
- module.exports = app
-
-
-
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Algo salió mal!');
@@ -78,5 +74,6 @@ app.use((err, req, res, next) => {
 app.use(userRoutes)
 app.use(taskRoutes)
 
+module.exports = app
 
 app.listen(process.env.PORT || 3000, console.log(`running in port ${process.env.PORT || 3000}`))
