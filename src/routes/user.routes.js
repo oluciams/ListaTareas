@@ -1,10 +1,13 @@
 const router = require('express').Router()
 
+const validator = require('../middlewares/register.validator.middleware')
+const userSchemaValidator = require('../validators/user.validator')
+
 const {createUserForm, createUser, loginUserForm, loginUser, logoutUser} = require('../controllers/user.controller')
 
 router.get('/register', createUserForm)
 
-router.post('/register', createUser)
+router.post('/register', validator(userSchemaValidator), createUser)
 
 router.get('/login', loginUserForm)
 

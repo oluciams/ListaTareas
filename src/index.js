@@ -66,13 +66,25 @@ app.engine('.hbs', hbs({
   
  app.set('view engine', 'hbs')
 
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Algo salió mal!');
-});
-
 app.use(userRoutes)
 app.use(taskRoutes)
+
+app.use((err, req, res, next) => {
+
+    if (err.statusCode === 400) {
+        
+        const errors = [];
+        errors.push({ text: err.message })
+        res.status(err.statusCode).render("register", {
+            errors,
+        });
+    } else {
+        res.status(500).render('errors/serverError')
+    }   
+
+});
+
+
 
 module.exports = app
 
