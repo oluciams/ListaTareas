@@ -4,19 +4,17 @@
 
 <table class="table">
   <thead>
-    <tr>
-      <th scope="col">#</th>
+    <tr>     
       <th scope="col">Task Name</th>
       <th scope="col">Description</th>
       <th scope="col">Status</th>
       <th scope="col">Edit</th>
-      <th scope="col">remove</th>
+      <th scope="col">Remove</th>
     </tr>
   </thead>
   <tbody>
       {{#each tasks}}
-    <tr>
-      <th scope="row"></th>
+    <tr>      
       <td>{{title}}</td>
       <td>{{description}}</td>
       <td>
@@ -24,14 +22,17 @@
           <form action="/status/{{_id}}" method="POST">
           {{#if status}}
             <input class="form-check-input" type="checkbox" id="{{_id}}" name="statuscheck" onChange="this.form.submit()" aria-label="..." checked>
+            <span class="badge bg-success">Finished</span>
+            
           {{else}}
             <input class="form-check-input" type="checkbox" id="{{_id}}" name="statuscheck" onChange="this.form.submit()" aria-label="...">
+            <span class="badge bg-warning text-dark">Pending</span>
           {{/if}}
           </form>
           </div>
       </td>    
-      <td><a href="/tasks/edit/{{_id}}"><i class="fas fa-edit"></i></a></td>
-      <td><a href="/tasks/delete/{{_id}}?_method=DELETE"><i class="fas fa-trash-alt"></i> </a></td>     
+      <td><a href="/tasks/edit/{{_id}}" class="text-secondary"><i class="fas fa-edit"></i></a></td>
+      <td><a href="/tasks/delete/{{_id}}?_method=DELETE" class="text-danger"><i class="fas fa-trash-alt"></i> </a></td>     
     </tr>
     {{/each}} 
     </tbody>
