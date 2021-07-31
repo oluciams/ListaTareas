@@ -3,8 +3,9 @@
     <a class="navbar-brand" href="#">My Tasks</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
-    </button>
+    </button>    
     <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+      {{#if user}}
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/">Home</a>
@@ -16,16 +17,22 @@
           <a class="nav-link" href="/">Form</a>
         </li>       
       </ul>
-
-      <div class="nav-item my-2">
-        <a href="/logout"><i class="fas fa-sign-out-alt mx-1"> Logout</i></a>   
+      <div class="nav-item my-2">        
+        <a class="btn btn-outline-dark mx-1" href="/logout"><i class="fas fa-sign-out-alt "> Logout</i></a>   
       </div>
-
       <form class="d-flex">      
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>        
       </form>
+       {{else}}
 
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>              
+      </ul>
+      
+      {{/if}}
     </div>
   </div>
 </nav>
