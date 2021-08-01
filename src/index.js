@@ -69,6 +69,8 @@ app.engine('.hbs', hbs({
 app.use(userRoutes)
 app.use(taskRoutes)
 
+app.use(express.static(path.join(__dirname, "public")))
+
 app.use((err, req, res, next) => {
 
     if (err.statusCode === 400) {

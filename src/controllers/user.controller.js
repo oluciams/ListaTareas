@@ -43,7 +43,7 @@ const logoutUser = (req,res)=>{
     req.session = null    
     res.clearCookie('session')
     res.clearCookie('session.sig')    
-    res.redirect('/login')
+    res.render('home')
 }
 
 module.exports = {
