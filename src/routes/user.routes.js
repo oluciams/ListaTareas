@@ -3,9 +3,7 @@ const router = require('express').Router()
 const validator = require('../middlewares/register.validator.middleware')
 const userSchemaValidator = require('../validators/user.validator')
 
-const {getHome, createUserForm, createUser, loginUserForm, loginUser, logoutUser} = require('../controllers/user.controller')
-
-router.get('/', getHome);
+const {createUserForm, createUser, loginUserForm, loginUser, logoutUser} = require('../controllers/user.controller')
 
 router.get('/register', createUserForm)
 router.post('/register', validator(userSchemaValidator), createUser)
