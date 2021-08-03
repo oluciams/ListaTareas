@@ -3,7 +3,7 @@ const app = require('../index')
 
 
 const getHome = (req, res)=>{    
-    res.render('index' )       
+    res.redirect('/tasks' )       
 }
 
 
@@ -18,7 +18,7 @@ const createTask = async (req,res)=>{
         errors.push({ text: "Please Write a Description" });
       }
     if (errors.length > 0) {
-        res.render("index", {
+        res.render("createTask", {
           errors,
           title,
           description,
@@ -28,7 +28,7 @@ const createTask = async (req,res)=>{
             const task = new Task({title, description, user: res.locals.user});
             await task.save();        
             req.flash('success_msg', 'Task added successfully')
-            res.redirect('tasks')
+            res.redirect('/tasks')
         }catch (error) {
             throw new Error(error)
         }
@@ -96,6 +96,10 @@ const updateStatus =  async(req, res)=>{
     }
 }
 
+const showTaskForm = async (req, res) => {
+        res.status(200).render('createTask')
+}
+
 module.exports = {
     getHome,
     createTask,
@@ -104,5 +108,6 @@ module.exports = {
     renderEditForm,
     updateTask,
     statusTask,
-    updateStatus
+    updateStatus,
+    showTaskForm
 }
