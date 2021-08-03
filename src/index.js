@@ -71,6 +71,10 @@ app.use(taskRoutes)
 
 app.use(express.static(path.join(__dirname, "public")))
 
+app.get('*', function(req, res, next ){
+    res.status(404).render('notFound')
+})
+
 app.use((err, req, res, next) => {
 
     if (err.statusCode === 400) {
