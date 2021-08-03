@@ -1,6 +1,11 @@
 const User = require('../models/modelUser')
 const app = require ('../index')
 
+//1
+const getHome = (req, res) => {
+    res.render('home');
+}
+
 const createUserForm = (req,res)=>{      
     res.render('register')    
 }
@@ -47,11 +52,12 @@ const logoutUser = (req,res)=>{
 }
 
 module.exports = {
+    getHome,
     createUserForm,
     createUser,
     loginUserForm,
     loginUser,
-    logoutUser
+    logoutUser,   
 }
 
 
